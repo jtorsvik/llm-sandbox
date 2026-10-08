@@ -21,3 +21,9 @@ Sandbox for LLM application development: LangChain, LangGraph, Langflow, LangSmi
 - Providers: OpenAI, Anthropic, Google GenAI, Ollama, HuggingFace
 - Vector stores / embeddings: chromadb, faiss-cpu, sentence-transformers
 - Utilities: tiktoken, tenacity, pydantic, python-dotenv, httpx
+
+## Docs
+
+- [docs/langchain.md](docs/langchain.md): LangChain and LangGraph packages and components
+- [docs/langsmith.md](docs/langsmith.md): tracing, datasets and evaluation with LangSmith and openevals
+- [docs/langflow.md](docs/langflow.md): the visual builder, API usage and custom components
