@@ -1,6 +1,6 @@
-# LangChain & LangGraph
+# LangChain
 
-LangChain is a framework for building applications on top of LLMs. It gives you a common interface for models, prompts, tools, retrievers and agents, so you can swap providers without rewriting your app. LangGraph is the lower-level orchestration engine that powers LangChain agents.
+LangChain is a framework for building applications on top of LLMs. It gives you a common interface for models, prompts, tools, retrievers and agents, so you can swap providers without rewriting your app. [LangGraph](./langgraph.md) is the lower-level orchestration engine that powers LangChain agents.
 
 Installed versions: `langchain` 1.3, `langchain-core` 1.6, `langgraph` 1.2.
 
@@ -12,7 +12,7 @@ LangChain is split into many packages. Knowing which one owns what makes imports
 |---|---|
 | `langchain-core` | Base abstractions: messages, prompts, `Runnable`, output parsers, tools, `Document`, `Embeddings`, `VectorStore`, callbacks. Everything else depends on it. |
 | `langchain` | High-level entry points: `create_agent`, `init_chat_model`, `init_embeddings`, agent middleware, `langchain.tools`, `langchain.messages`. |
-| `langgraph` | Graph-based runtime for stateful, multi-step, resumable workflows and agents (`StateGraph`, checkpointers, human-in-the-loop). `create_agent` runs on it. |
+| `langgraph` | Graph-based runtime for stateful, multi-step, resumable workflows and agents (`StateGraph`, checkpointers, human-in-the-loop). `create_agent` runs on it. See [langgraph.md](./langgraph.md). |
 | `langchain-openai`, `langchain-anthropic`, `langchain-google-genai`, `langchain-ollama`, `langchain-huggingface` | Provider integrations (chat models and embeddings). Install only the providers you use. |
 | `langchain-text-splitters` | Splits documents into chunks for embedding and retrieval. |
 | `langchain-chroma` | Chroma vector store integration (backed by `chromadb`). |
@@ -253,34 +253,18 @@ Alternatively, expose the retriever as a tool (`@tool` that calls `retriever.inv
 
 ## 10. LangGraph
 
-Use LangGraph directly when you need explicit control flow: branches, loops, parallel steps, human approval, or several cooperating agents.
-
-Core concepts:
-
-- **State**: a `TypedDict` (or Pydantic model) that flows through the graph. Fields can have reducers, e.g. `Annotated[list, add_messages]` appends messages instead of overwriting.
-- **Nodes**: functions that take the state and return a partial state update.
-- **Edges**: fixed transitions (`add_edge`) or routing functions (`add_conditional_edges`).
-- **`START` / `END`**: entry and exit points.
-- **Checkpointer**: persists state per `thread_id`, enabling memory, resume after failure, and time travel (`InMemorySaver` for dev, SQLite/Postgres savers for production).
-- **`interrupt`**: pause for human input and resume with `Command(resume=...)` (both from `langgraph.types`).
-- **Streaming**: `graph.stream(..., stream_mode="updates" | "values" | "messages")`.
+Use LangGraph directly when you need explicit control flow: branches, loops, parallel steps, persistence, human approval, or several cooperating agents. `create_agent` already runs on it. A minimal graph with memory:
 
 ```python
-from typing import Annotated, TypedDict
 from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.graph import END, START, StateGraph
-from langgraph.graph.message import add_messages
+from langgraph.graph import START, MessagesState, StateGraph
 
-class State(TypedDict):
-    messages: Annotated[list, add_messages]
-
-def chatbot(state: State):
+def chatbot(state: MessagesState):
     return {"messages": [model.invoke(state["messages"])]}
 
-builder = StateGraph(State)
+builder = StateGraph(MessagesState)
 builder.add_node("chatbot", chatbot)
 builder.add_edge(START, "chatbot")
-builder.add_edge("chatbot", END)
 graph = builder.compile(checkpointer=InMemorySaver())
 
 config = {"configurable": {"thread_id": "user-1"}}
@@ -288,16 +272,7 @@ graph.invoke({"messages": [("human", "My name is Sam.")]}, config)
 graph.invoke({"messages": [("human", "What is my name?")]}, config)  # remembers
 ```
 
-Conditional routing:
-
-```python
-def route(state: State) -> str:
-    return "tools" if state["messages"][-1].tool_calls else END
-
-builder.add_conditional_edges("chatbot", route)
-```
-
-The prebuilt `ToolNode` (from `langgraph.prebuilt`) executes tool calls inside a graph. `langgraph-sdk` is the client for talking to a deployed LangGraph server.
+See [langgraph.md](./langgraph.md) for state and reducers, conditional edges, `Command` and `Send`, checkpointers and stores, human-in-the-loop, streaming, subgraphs, multi-agent patterns and the dev server.
 
 ## 11. Callbacks and tracing
 
