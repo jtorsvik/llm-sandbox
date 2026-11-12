@@ -107,7 +107,7 @@ Account fields you need: `regnskapstype`, `regnskapsperiode.tilDato`, `valuta`, 
 | `Statens vegvesen` | done | OK | none | accounts 404 is normal for a public body |
 | `984851006` | done | REVIEW | R6 | accounts 500 (BANK layout) |
 | `Telenor` | needs_clarification | none | none | hit #1 is a union club |
-| `Telenore ASA` | needs_clarification | none | none | typo; options include `TELENOR ASA` (982463718) |
+| `Telenor ASA` | needs_clarification | none | none | typo; options include `TELENOR ASA` (982463718) |
 | `Bergen Bygg` | needs_clarification | none | none | more than one plausible unit |
 | `923609017` | invalid_number | none | none | fails mod 11 (the API says 404) |
 | `999999999` | not_found | none | none | passes mod 11, does not exist |
