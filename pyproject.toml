@@ -33,6 +33,25 @@ dependencies = [
     "sentence-transformers>=6.1.0",
     "tenacity>=9.1.4",
     "tiktoken>=0.14.0",
+    "deepagents==0.7.0",
+    "langgraph>=1.0.0,<2.0",
+    "langchain>=1.0.0,<2.0",
+    "langchain-core>=1.3.3,<2.0",
+    "langchain-anthropic",
+    "langchain-openai",
+    "langgraph-cli[inmem]>=0.4.0",
+    "python-dotenv",
+    "langsmith[sandbox]>=0.14.14,<0.15",
+    "langchain-ollama>=1.1.0",
+    "langchain-community>=0.4.2",
+    "deepagents-code",
+    "langchain-quickjs",
+    "langchain-mcp-adapters",
+    "tavily-python",
+    "markdown",
+    "nh3",
+    "matplotlib>=3.11.0",
+    "questionary>=2.0.0",
 ]
 
 [dependency-groups]
@@ -42,3 +61,16 @@ dev = [
     "pytest>=9.1.1",
     "ruff>=0.16.10",
 ]
+
+# Provider extras referenced by the install table in models.py
+# (`uv sync --extra azure|bedrock|google`).
+[project.optional-dependencies]
+# AzureChatOpenAI ships with langchain-openai (already a core dependency);
+# defining the extra keeps the documented command valid.
+azure = [
+    "langchain-openai",
+]
+
+[tool.ruff]
+lint.select = ["E", "F", "I", "UP"]
+lint.ignore = ["T201", "E501", "UP006", "UP007", "E402"]
