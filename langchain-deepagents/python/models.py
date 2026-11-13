@@ -46,7 +46,7 @@ from langchain.chat_models import init_chat_model
 # Install first:  uv sync --extra google
 # Requires GOOGLE_API_KEY in .env
 #
-model = init_chat_model("google_genai:gemini-3.5-flash-lite")
+model = init_chat_model("google_genai:gemini-3.6-flash")
 
 # ═══ Default Models ══════════════════════════════════════════════════════════
 # Workshop default: Anthropic claude-haiku-4-5, fast and cost-effective.
