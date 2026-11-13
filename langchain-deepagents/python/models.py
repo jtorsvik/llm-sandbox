@@ -28,6 +28,7 @@ To swap providers:
 import os  # noqa: F401  # used in commented-out model examples below
 from pathlib import Path
 
+import truststore
 from dotenv import load_dotenv
 
 ROOT_ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
@@ -36,10 +37,10 @@ ENV_PATH = (
     if ROOT_ENV_PATH.is_file()
     else Path(__file__).resolve().parent / ".env"
 )
+truststore.inject_into_ssl()
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 
 from langchain.chat_models import init_chat_model
-
 
 # ─── Google Gemini ────────────────────────────────────────────────────────────
 # Install first:  uv sync --extra google

@@ -26,6 +26,12 @@ LANGSMITH_PROJECT=llm-sandbox        # where traces are grouped
 
 3. Call `load_dotenv()` before running your code. Set `LANGSMITH_TRACING=false` to turn tracing off without removing code.
 
+On macOS, the Deep Agents model setup uses `truststore` so Python HTTPS clients
+can use the system certificate store (including certificates trusted by the
+login keychain). If TLS verification still fails, ask your administrator to
+install the required CA in the system keychain or provide a trusted CA bundle;
+do not disable certificate verification.
+
 ## 3. Core concepts
 
 | Concept | Meaning |
