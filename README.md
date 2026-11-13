@@ -7,6 +7,16 @@ Sandbox for LLM application development: LangChain, LangGraph, Langflow, LangSmi
     uv sync
     cp .env.example .env   # add your API keys
 
+`langchain-deepagents/python` is part of the root uv workspace. To run one of
+its scripts with both the root and member dependencies in the shared environment:
+
+    cd langchain-deepagents/python
+    uv run --all-packages python m1/m1.2_scratch_agent.py
+
+This uses the root `.venv` and `uv.lock`; `--all-packages` prevents syncing only
+the member's dependencies into the shared environment. The workspace supports
+Python `>=3.12,<3.15`, the intersection of the root and member requirements.
+
 ## Usage
 
     uv run langflow run            # start Langflow UI

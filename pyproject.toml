@@ -74,3 +74,6 @@ azure = [
 [tool.ruff]
 lint.select = ["E", "F", "I", "UP"]
 lint.ignore = ["T201", "E501", "UP006", "UP007", "E402"]
+
+[tool.uv.workspace]
+members = ["langchain-deepagents/python"]
